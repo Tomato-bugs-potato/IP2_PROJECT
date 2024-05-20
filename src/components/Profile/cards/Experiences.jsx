@@ -3,7 +3,7 @@ import edit from '../../../img/Category/editc.svg'
 import ExperiencePopup from '../../popup/ExperiencePopup';
 
 
-const Experiences = ({profileData}) => {
+const Experiences = ({profileData, isOwnProfile}) => {
 
   const [showAllExperiences, setShowAllExperiences] = useState(false);
   const [isExpanded, setIsExpanded] = useState(null);
@@ -57,16 +57,18 @@ const Experiences = ({profileData}) => {
         <div className='relative h-[335px] border border-gray-300 rounded-sm shadow-inside 'style={{ overflowY: 'auto' }}>
             <div className='flex justify-between'>
                 <div className='p-4 font-bold text-xl'><h1 className=''>Experiences</h1></div>
-                <div>
-            <button onClick={handleOpenPopup}
-                className='absolute top-2 right-2 transform -translate-y-1.2 overflow-hidden border border-gray-500 m-5 rounded-sm p-1' >
-                  
-                  <img src={edit} alt="" className='w-8 h-8'/>
-            </button>
-            {showPopup && (
-                    <ExperiencePopup handleSubmit={handleSubmit} onClose={handleClosePopup} />
-                  )}  
-                </div>
+                {isOwnProfile ? (
+                  <div>
+                  <button onClick={handleOpenPopup}
+                      className='absolute top-2 right-2 transform -translate-y-1.2 overflow-hidden border border-gray-500 m-5 rounded-sm p-1' >
+                        
+                        <img src={edit} alt="" className='w-8 h-8'/>
+                  </button>
+                  {showPopup && (
+                          <ExperiencePopup handleSubmit={handleSubmit} onClose={handleClosePopup} />
+                        )}  
+                      </div>
+                ) : (<></>)}
             </div>
             <div className='overflow-y-auto' >
             {profileData.experiences && profileData.experiences.map((experience, index) => (

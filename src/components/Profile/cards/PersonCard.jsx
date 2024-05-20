@@ -10,7 +10,7 @@ import edit from '../../../img/Category/edit.svg'
 import { fetchCoverPic, uploadCoverPicture, uploadProfilePicture,fetchProfilePic } from '../../../firebase/personalProfileHandler/FirebaseFunctions'
 import { FaQuoteLeft, FaQuoteRight } from 'react-icons/fa6'
 import axios from 'axios';
-const PersonCard = ({onUpdateProfile, profileData}) => {
+const PersonCard = ({onUpdateProfile, profileData, isOwnProfile}) => {
 
     
     const useNav = useNavigate();
@@ -109,16 +109,18 @@ const CoverPhoto = () => (
       
     <div className='flex justify-end relative h-32 bg-cover bg-center w-full' style={{backgroundImage: `url(${userProfile.coverPictureURL || defaultprofile})`}}>
         <div className='p-5'>
-            <button >
-                <div 
-                    
-                    onClick={() => coverPicRef.current.click()}
-                    className='items-center justify-center rounded-full bg-opacity-50 hover:bg-opacity-70 transition duration-300'>
-                        <div className='w-12 h-12 border border-gray-400 border-2 rounded-sm flex items-center justify-center'>
-                            <img src={edit} alt="" className='w-7 h-7'/>
-                        </div>
-                </div>
-            </button>
+            {isOwnProfile ? (
+                  <button >
+                  <div 
+                      
+                      onClick={() => coverPicRef.current.click()}
+                      className='items-center justify-center rounded-full bg-opacity-50 hover:bg-opacity-70 transition duration-300'>
+                          <div className='w-12 h-12 border border-gray-400 border-2 rounded-sm flex items-center justify-center'>
+                              <img src={edit} alt="" className='w-7 h-7'/>
+                          </div>
+                  </div>
+              </button>
+            ): (<></>)}
             <input ref={coverPicRef} type="file" accept='image/*' name='coverPicture' className='hidden' onChange={handleCoverChange}/>
         </div>
     </div>
@@ -128,11 +130,13 @@ const ProfilePic = () => (
     <div className='absolute top-12 left-8 transform -translate-y-1.2 h-36 w-36 rounded-full overflow-hidden bg-white'>
         <div className='absolute top-2 left-2 transform -translate-y-1.2 h-32 w-32 rounded-full overflow-hidden'>
             <img src={userProfile.profilePictureURL || defaultprofile}  alt="" className='h-full w-full object-cover'/>
-            <button 
-                onClick={() => profilePicRef.current.click()}
-                className='absolute bottom-4 right-2 transform -translate-y-1.2 overflow-hidden ' >
-                    <img src={edit} alt="" className='w-7 h-7 '/>
-            </button>
+            {isOwnProfile ? (
+                 <button 
+                 onClick={() => profilePicRef.current.click()}
+                 className='absolute bottom-4 right-2 transform -translate-y-1.2 overflow-hidden ' >
+                     <img src={edit} alt="" className='w-7 h-7 '/>
+             </button>
+            ) : (<></>)}
             <input type="file"  ref={profilePicRef} accept='image/*' name='profilePicture' className='hidden'  onChange={handleProfileChange}/>
             <div>
             </div>
@@ -155,9 +159,13 @@ const ProfilePic = () => (
             </div> 
             <div className='flex pl-20 pl-10 pt-5'><FaQuoteLeft/>{profileData.bio}<FaQuoteRight/></div>
             </div>
+            {isOwnProfile ? (
             <div className=''>
                 <button onClick={handleClick}  className='py-2 px-7 border border-blue border-1 rounded-sm text-blue font-semibold mt-8 cursor-pointer'>Edit Profile</button>
             </div>
+            ) : (
+                <></>
+            )}
         </div> 
        </div>
     </div>

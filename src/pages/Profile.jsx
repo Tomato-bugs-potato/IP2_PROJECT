@@ -3,16 +3,15 @@ import PersonCard from '../components/Profile/cards/PersonCard'
 import AboutPerson from '../components/Profile/cards/AboutPerson'
 import Experiences from '../components/Profile/cards/Experiences'
 import Educations from '../components/Profile/cards/Educations'
-import Portfolio from '../components/Profile/cards/Portfolio'
-import { useAuth } from '../contexts/AuthProvider'
-import { db } from '../firebase/firebase'
-import { getFirestore, addDoc, collection, setDoc, doc, getDoc,getDocs } from 'firebase/firestore';
+import { useParams } from 'react-router-dom'
 
 const Profile = () => {
 
   const [profileData, setProfiledata] = useState({});
   const userData = JSON.parse(sessionStorage.getItem("userData"));
-  const id = userData?.id;
+  const { id } = useParams(); 
+  const newId = id || userData?.id;
+  const isOwnProfile = !id;
   
 
   const handleProfileUpdate = (updatedProfile) => {
@@ -23,7 +22,7 @@ const Profile = () => {
   useEffect(() => {
     const fetchProfileData = async () => {
       try {
-        const response = await fetch(`http://localhost/JobpiaSERVER/profile.php?userId=${id}`);
+        const response = await fetch(`http://localhost/JobpiaSERVER/profile.php?userId=${newId}`);
         if (response.ok) {
           const profileData = await response.json();
           setProfiledata(profileData);
@@ -49,10 +48,10 @@ const Profile = () => {
             </div>
             <div>
             <hr className=''/>
-            <PersonCard onUpdateProfile= {handleProfileUpdate} profileData={profileData}/>
-            <AboutPerson  profileData={profileData}/>   
-            <Experiences profileData={profileData}/>
-            <Educations profileData={profileData}/>
+            <PersonCard onUpdateProfile= {handleProfileUpdate} profileData={profileData} isOwnProfile = {isOwnProfile}/>
+            <AboutPerson  profileData={profileData} isOwnProfile = {isOwnProfile}/>   
+            <Experiences profileData={profileData} isOwnProfile = {isOwnProfile}/>
+            <Educations profileData={profileData} isOwnProfile = {isOwnProfile}/>
             </div>
          </div> 
       </div>

@@ -1,6 +1,6 @@
 import React, {useState} from 'react'
 
-const AboutPerson = ({profileData }) => {
+const AboutPerson = ({profileData, isOwnProfile }) => {
 
   const [isExpanded,setIsExpanded] = useState(false);
   
@@ -14,7 +14,9 @@ const AboutPerson = ({profileData }) => {
             <div className='flex justify-between' >
                 <div className='p-10 pl-10 font-bold text-xl'><h1 className=''>About Me</h1></div>
                 <div className='p-6 pt-7'>
-                <button className='px-4 py-1 border border-red-400 rounded-sm text-moto font-bold'>Edit</button>
+                {isOwnProfile ? (
+                   <button className='px-4 py-1 border border-red-400 rounded-sm text-moto font-bold'>Edit</button>
+                ) : (<></>)}
                 </div>
             </div>
             <div className='p-7 pt-2 pl-20 mx-auto pb-4 cursor-pointer'>

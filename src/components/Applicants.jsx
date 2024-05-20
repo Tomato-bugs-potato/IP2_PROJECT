@@ -1,6 +1,7 @@
 import React, {useState, useEffect} from 'react'
-import { Link } from 'react-router-dom';
+import { Link, useParams } from 'react-router-dom';
 import { useNavigate } from 'react-router-dom';
+import * as XLSX from 'xlsx';
 
 
 const PostedJobs = () => {
@@ -11,14 +12,11 @@ const PostedJobs = () => {
     const [error, setError] = useState('');
     const [currPage, setCurrPage] = useState(1);
     const navigate = useNavigate();
-    const userData = JSON.parse(sessionStorage.getItem("userData"));
-    const id = userData?.id;
-
+  
+    const{ id } = useParams();
     useEffect(() => {
-      const userData = JSON.parse(sessionStorage.getItem("userData"));
-      const id = userData?.id;
-
-      fetch(`http://localhost/JobpiaSERVER/postedJobs.php?userId=${id}`)
+  
+      fetch(`http://localhost/JobpiaSERVER/jobApplicants.php?job_posting_id=${id}`)
           .then(response => response.json())
           .then(data => {
               setJobs(data);
@@ -29,7 +27,6 @@ const PostedJobs = () => {
               setIsLoading(false);
           });
   }, [searchJob]);
-  console.log(id);
 
     const handleSearchJob = () => {
         const filteredJob = jobs.filter((job) => job.jobTitle.toLowerCase().indexOf(searchJob.toLowerCase()) !== -1);
@@ -71,7 +68,12 @@ const PostedJobs = () => {
           });
   };
 
-  console.log(jobs);
+  const exportToExcel = () => {
+    const worksheet = XLSX.utils.json_to_sheet(jobs);
+    const workbook = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(workbook, worksheet, "Jobs");
+    XLSX.writeFile(workbook, "JobsData.xlsx");
+  };
 
     return (
     <div>
@@ -90,10 +92,10 @@ const PostedJobs = () => {
             <div class="rounded-t mb-0 px-4 py-3 border-0">
               <div class="flex flex-wrap items-center">
                 <div class="relative w-full px-4 max-w-full flex-grow flex-1">
-                  <h3 class="font-semibold text-base text-blueGray-700">Posted Jobs</h3>
+                  <h3 class="font-semibold text-base text-blueGray-700">Applicants List</h3>
                 </div>
                 <div class="relative w-full px-4 max-w-full flex-grow flex-1 text-right">
-                  <Link to = '/postJobs'><button class="bg-indigo-500 text-white active:bg-indigo-600 text-xs font-bold uppercase px-3 py-2 rounded outline-none focus:outline-none mr-1 mb-1 ease-linear transition-all duration-150" type="button">Post a new Job</button></Link>
+                  <button class="bg-indigo-500 text-white active:bg-indigo-600 text-xs font-bold uppercase px-3 py-2 rounded outline-none focus:outline-none mr-1 mb-1 ease-linear transition-all duration-150" type="button" onClick={exportToExcel}>Export Applicant List</button>
                 </div>
               </div>
             </div>
@@ -106,19 +108,19 @@ const PostedJobs = () => {
                                   Job Number
                                 </th>
                   <th class="px-6 bg-blueGray-50 text-blueGray-500 align-middle border border-solid border-blueGray-100 py-3 text-xs uppercase border-l-0 border-r-0 whitespace-nowrap font-semibold text-left">
-                                  TITLE
+                                  Applicant Name
                                 </th>
                   <th class="px-6 bg-blueGray-50 text-blueGray-500 align-middle border border-solid border-blueGray-100 py-3 text-xs uppercase border-l-0 border-r-0 whitespace-nowrap font-semibold text-left">
-                                  Company Name
+                                  email                                  
                                 </th>
                   <th class="px-6 bg-blueGray-50 text-blueGray-500 align-middle border border-solid border-blueGray-100 py-3 text-xs uppercase border-l-0 border-r-0 whitespace-nowrap font-semibold text-left">
-                                  Salary
+                                  Description
                                 </th>
                   <th class="px-6 bg-blueGray-50 text-blueGray-500 align-middle border border-solid border-blueGray-100 py-3 text-xs uppercase border-l-0 border-r-0 whitespace-nowrap font-semibold text-left">
-                                  Edit
+                                  Application Date
                                 </th>
                   <th class="px-6 bg-blueGray-50 text-blueGray-500 align-middle border border-solid border-blueGray-100 py-3 text-xs uppercase border-l-0 border-r-0 whitespace-nowrap font-semibold text-left">
-                                  View Applicants
+                                  View Profile
                                 </th>
                   <th class="px-6 bg-blueGray-50 text-blueGray-500 align-middle border border-solid border-blueGray-100 py-3 text-xs uppercase border-l-0 border-r-0 whitespace-nowrap font-semibold text-left">
                                   Delete
@@ -136,32 +138,25 @@ const PostedJobs = () => {
                         {index + 1}
                       </th>
                       <td class="border-t-0 px-6 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-4 ">
-                        {jobs.jobTitle}
+                        {jobs.fullName}
                       </td>
                       <td class="border-t-0 px-6 align-center border-l-0 border-r-0 text-xs whitespace-nowrap p-4">
-                        {jobs.companyName}
+                        {jobs.email}
                       </td>
                       <td class="border-t-0 px-6 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-4">
-                        ${jobs.minPrice} - ${jobs.maxPrice}
+                        {jobs.description}
                       </td>
                       <td class="border-t-0 px-6 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-4">
-                        <button className='py-1.5 px-5 border border-solid-5 rounded:sm text-blue font-bold'>
+                        {jobs.applicationDate}
+                      </td>
+                      <td class="border-t-0 px-6 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-4">
+                       
+                             <button className='py-1.5 px-5 border border-solid-5 rounded:sm text-blue font-bold'>
                           <Link         
                               to={{ 
-                                pathname: `/edit-job/${jobs.id}`,
+                                pathname: `/applicantProfile/${jobs.id}`,
                                 state: { jobsId: jobs.id } 
-                              }}>Edit</Link>
-                        </button>
-                      </td>
-                      <td class="border-t-0 px-6 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-4">
-                        <button 
-                          className='py-1.5 px-5 border border-solid-5 rounded:sm text-blue font-bold'
-                          >
-                             <Link         
-                              to={{ 
-                                pathname: `/viewApplicants/${jobs.id}`,
-                                state: { jobsId: jobs.id } 
-                              }}>View Applicants</Link>
+                              }}>View Profile</Link>
                         </button>
                       </td>
                       <td class="border-t-0 px-6 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-4">

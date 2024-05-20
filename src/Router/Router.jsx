@@ -4,7 +4,6 @@ import { HomePage } from '../pages/HomePage';
 import AllJobs from '../pages/AllJobs';
 import Protected from './Protected';
 import Authentication from './Authentication';
-import Profile from '../pages/Profile';
 import UpdateJob from '../pages/UpdateJob';
 import MyJobs from '../pages/MyJobs';
 import PostJobs from '../pages/PostJobs';
@@ -16,6 +15,10 @@ import Settings from '../pages/Settings';
 import SidebarProfile from '../pages/SidebarProfile';
 import ProfileEdit from '../pages/ProfileEdit';
 import ApplyForJobForm from '../pages/ApplyForJobForm';
+import Applicants from '../components/Applicants'
+import ApplicantProfile from '../pages/ApplicantProfile';
+import Profile from '../pages/Profile'
+
 
 const router = createBrowserRouter([
   {
@@ -54,6 +57,14 @@ const router = createBrowserRouter([
         <Footer/>
       </Protected>
     ),
+  }, {
+    path: '/applicantProfile/:id',
+    element: (
+      <Protected isSignedIn={Authentication.isSignedIn}>
+        <ApplicantProfile />
+        <Footer/>
+      </Protected>
+    ),
   },
   {
     path: '/edit-job/:id',
@@ -61,6 +72,15 @@ const router = createBrowserRouter([
       <Protected isSignedIn={Authentication.isSignedIn}>
         <Navbar/>
         <UpdateJob />
+        <Footer/>
+      </Protected>
+    ),
+  },{
+    path: '/viewApplicants/:id',
+    element: (
+      <Protected isSignedIn={Authentication.isSignedIn}>
+        <Navbar/>
+        <Applicants/>
         <Footer/>
       </Protected>
     ),

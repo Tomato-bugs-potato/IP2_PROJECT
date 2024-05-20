@@ -4,7 +4,7 @@ import EducationPopup from '../../popup/EducationPopup';
 import edit from '../../../img/Category/editc.svg'
 
 
-const Educations = ({profileData}) => {
+const Educations = ({profileData, isOwnProfile}) => {
 
   const [showAllEducations, setShowAllEducations] = useState(false);
   const [isExpanded,setIsExpanded] = useState(null);
@@ -60,16 +60,18 @@ return (
        
             <div className='flex justify-between'>
                 <div className='p-4 font-bold text-xl'><h1 className=''>Educations</h1></div>
-                <div>
-                <button onClick={handleOpenPopup}
-                    className='absolute top-2 right-2 transform -translate-y-1.2 overflow-hidden border border-gray-500 m-5 p-1 rounded-sm' >
-                      
-                      <img src={edit} alt="" className='w-8 h-8'/>
-                </button>
-                {showPopup && (
-                        <EducationPopup handleSubmit={handleSubmit} onClose={handleClosePopup} />
-                      )}  
-                </div>
+                {isOwnProfile ? (
+                  <div>
+                  <button onClick={handleOpenPopup}
+                      className='absolute top-2 right-2 transform -translate-y-1.2 overflow-hidden border border-gray-500 m-5 p-1 rounded-sm' >
+                        
+                        <img src={edit} alt="" className='w-8 h-8'/>
+                  </button>
+                  {showPopup && (
+                          <EducationPopup handleSubmit={handleSubmit} onClose={handleClosePopup} />
+                        )}  
+                  </div>
+                ) : (<></>)}
             </div>
             {profileData.educations && profileData.educations.map((education, index) => (
               <div key={index} className={`p-4 pt-0 pl-8 ${index ===0 || showAllEducations ? '' : 'hidden'}`}>
