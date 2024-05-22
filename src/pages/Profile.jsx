@@ -37,15 +37,24 @@ const Profile = () => {
     fetchProfileData();
   }, [id]); 
 
-  
-  console.log(profileData);
+  const handlePrint = () => {
+    window.print();
+  };
+
   return (
     <div className='flex h-[800px]'>
        <div className='flex-1 h-screen'>
-         <div>
-            <div className='pt-7 text-4xl m-6 pl-36 pr-12 font-semibold'>
+         <div className=''>
+          <div className='flex justify-between'>
+          <div className='pt-7 text-4xl m-6 pl-36 pr-12 font-semibold'>
               MyProfile
             </div>
+           {!isOwnProfile ? (
+             <div className='p-10'>
+             <button onClick={handlePrint} className='py-2 px-5 border border-solid-2 border-gray-400 rounded:sm text-blue font-bold text-xl'>Print User Profile</button>
+           </div>    
+           ) : (<></>)}
+          </div>
             <div>
             <hr className=''/>
             <PersonCard onUpdateProfile= {handleProfileUpdate} profileData={profileData} isOwnProfile = {isOwnProfile}/>

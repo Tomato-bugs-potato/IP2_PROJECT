@@ -46,7 +46,12 @@ if ($_SERVER["REQUEST_METHOD"] === "POST" && isset($_FILES["profilePicture"]) &&
  
 $sql = "UPDATE users SET profilePicture = '$folder' WHERE id = $userId";
 if ($conn->query($sql) === TRUE) {
-    echo json_encode(['success' => true, 'message' => 'Profile picture uploaded successfully']);
+    $insertHistorySql = "INSERT INTO profile_picture_history (user_id, profilePicture) VALUES ($userId, '$folder')";
+    if ($conn->query($insertHistorySql) === TRUE) {
+        echo json_encode(['success' => true, 'message' => 'Profile picture uploaded and history updated successfully']);
+    } else {
+        echo json_encode(['success' => false, 'message' => 'Failed to update profile picture history']);
+    }
 } else {
     echo json_encode(['success' => false, 'message' => 'Failed to update profile picture']);
 }

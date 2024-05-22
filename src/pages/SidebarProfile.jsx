@@ -14,7 +14,7 @@ import Profile from './Profile';
 import MyJobs from './MyJobs';
 
 const SidebarProfile = () => {
-    const { userLoggedIn } = useAuth();
+    const { userLoggedIn,logout } = useAuth();
     const [activeMenuItem, setActiveMenuItem] = useState("Public Profile");
 
 
@@ -26,8 +26,13 @@ const SidebarProfile = () => {
     };
 
     
+    const handleLogout = async() => {
+        logout()
+         sessionStorage.removeItem('loggedIn');
+         sessionStorage.removeItem('userData');
+     
+       }
    
-
     const MenuItems = [
         { title: "Dashboard", path: "/", icon: DashboardIcon },
         { title: "My Applications", path: "/myJobs", icon: ApplicationIcon },
@@ -75,7 +80,7 @@ const SidebarProfile = () => {
                     </ul>
                 </div>
                 {userLoggedIn ? (
-                    <button onClick={doSignOut} className='flex px-14 py-4 m-7 border border-gray-300 text-red-600 font-semibold rounded-md'>
+                    <button onClick={handleLogout} className='flex px-14 py-4 m-7 border border-gray-300 text-red-600 font-semibold rounded-md'>
                         <img src={LogOutIcon} alt="" className='w-7 h-7 mr-3 ml-0'/>
                         <span>Logout</span>
                     </button>

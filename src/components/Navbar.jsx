@@ -13,7 +13,7 @@ const Navbar = () => {
     const [profilePic, setProfilePic] = useState('');
     const {currentUser} = useAuth();
     const userId = currentUser ? currentUser.uid : null;
-    const { userLoggedIn, signOut} = useAuth();
+    const { userLoggedIn, logout} = useAuth();
     const handleMenuToggler = () => {
         setMenuOpen(!isMenuOpen)
     };
@@ -27,6 +27,14 @@ const Navbar = () => {
 
     }, [userId]);
 
+    const handleLogout = async() => {
+       logout()
+        sessionStorage.removeItem('loggedIn');
+        sessionStorage.removeItem('userData');
+    
+      }
+
+      
     const navbarItems = [
         {path: "/", title: "Home"},
         {path: "/allJobs", title: "All Jobs"},
@@ -58,7 +66,7 @@ const Navbar = () => {
                 {   userLoggedIn ? (
                     <div className='flex gap-4'>
                         <div>
-                            <button onClick={doSignOut} className='text-white py-2 px-4 mt-1 bg-blue border rounded '>Sign Out</button>
+                            <button onClick={handleLogout} className='text-white py-2 px-4 mt-1 bg-blue border rounded '>Sign Out</button>
                         </div>
                         <div>
                             <Link to={"/sidebarProfile"}><img src={profilePic} alt="" className='w-12 h-12 rounded-full cursor-pointer'/></Link>

@@ -25,10 +25,7 @@ const SidebarProfile = () => {
         setActiveMenuItem(title);
     };
 
-    const handlePrint = () => {
-        window.print();
-      };
-    
+   
    
 
     const MenuItems = [
@@ -46,7 +43,6 @@ const SidebarProfile = () => {
             <div className='w-100 pt-5'>
                 <div className='flex justify-between'>
                     <h1 className=' text-blue text-5xl font-bold pt-9 pb-2 px-14'>JoPia</h1>
-                    <div><button onClick={handlePrint} className='py-1.5 px-5 border border-solid-5 rounded:sm text-blue font-bold'>Print User Profile</button></div>    
                 </div>
                 <div className='flex gap-x-4 items-left pt-10'>
                     <ul className='text-gray-400'>

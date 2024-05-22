@@ -46,6 +46,7 @@ export const HomePage = () => {
     console.log(event.target.value);
   }
 
+ 
 
   const SearchedJobs = (query) => {
      return jobs.filter((job) => job.jobTitle.toLowerCase().indexOf(query.toLowerCase()) !== -1);

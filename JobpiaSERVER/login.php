@@ -1,12 +1,12 @@
 <?php
 
-error_reporting(E_ALL);
-ini_set('display_errors', 1);
 
+session_start();
 
 header("Access-Control-Allow-Origin: *");
 header("Access-Control-Allow-Methods: POST");
 header("Access-Control-Allow-Headers: Content-Type");
+header("Access-Control-Allow-Credentials: true");
 header("Content-Type: application/json");
 
 
@@ -54,14 +54,14 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             $user_id = $row['id'];
 
             if (password_verify($password, $password_hash)) {
+
                 // Authentication successful
                 $user = array(
                     'id' => $user_id,
                     'email' => $email,
                     'password' => $password
                 );
-
-                session_start();
+                
                 $_SESSION['id'] = $row['id'];
                 $_SESSION['email'] = $row['email'];
                 $_SESSION['user_id'] =$row['id'];
@@ -82,4 +82,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         echo createResponse('error', 'Wrong request.', []);
         exit;
     }
+    
 }
+
+?>

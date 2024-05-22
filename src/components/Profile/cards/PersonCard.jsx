@@ -14,9 +14,10 @@ const PersonCard = ({onUpdateProfile, profileData, isOwnProfile}) => {
 
     
     const useNav = useNavigate();
-    
+    const [isModalOpen, setIsModalOpen] = useState(false);
     const userData = JSON.parse(sessionStorage.getItem("userData"));
     const id = userData?.id;
+    const userId = id;
   
     const [userProfile, setUserProfile] = useState({
         profilePictureURL: '',
@@ -42,16 +43,16 @@ const PersonCard = ({onUpdateProfile, profileData, isOwnProfile}) => {
         const file = e.target.files[0];
         const response = await uploadCoverPicture(id,file); // Call PHP backend function
         if (response.success) {
+            setIsModalOpen(true);
             setUserProfile((prevData) => ({
                 ...prevData,
                 coverPictureURL: response.url,
+                
             }));
         }
     };
 
-    // Import axios for HTTP requests
-
-// Function to upload profile picture to PHP backend
+   
 const uploadProfilePicture = async (userId, file) => {
     const formData = new FormData();
     formData.append('userId', userId);
@@ -61,7 +62,6 @@ const uploadProfilePicture = async (userId, file) => {
     return response.data;
 };
 
-// Function to upload cover picture to PHP backend
 const uploadCoverPicture = async (userId, file) => {
     const formData = new FormData();
     formData.append('userId', userId);
@@ -75,7 +75,7 @@ useEffect(() => {
       try {
         const response = await axios.get(`http://localhost/JobpiaSERVER/displayProfile.php?userId${id}`, {
           params: {
-            userId: id, // Assuming id is the user ID fetched from sessionStorage
+            userId: id, 
           },
         });
         
@@ -99,11 +99,50 @@ useEffect(() => {
   }, [id]); // Trigger fetch when id changes
   
   
+  const [history, setHistory] = useState([]);
+
+  useEffect(() => {
+      const fetchHistory = async () => {
+          try {
+              const response = await axios.get(`http://localhost/JobpiaSERVER/getProfilePictureHistory.php?userId=${id}`);
+              setHistory(response.data);
+          } catch (error) {
+              console.error('There was an error fetching the profile picture history!', error);
+          }
+      };
+
+      fetchHistory();
+  }, [userId]);
 
    const handleClick = () => {
     useNav('/profileEdit');
     };
+    const toggleModal = () => {
+        setIsModalOpen(!isModalOpen);
+    };
 
+    
+    const handleHistoryClick = async (pictureUrl) => {
+        const formData = new FormData();
+        formData.append('userId', id);
+        formData.append('profileUrl', pictureUrl);
+
+        try {
+            const response = await axios.post('http://localhost/JobpiaSERVER/revertProfilePicture.php', formData);
+            if (response.data.success) {
+                setUserProfile((prevData) => ({
+                    ...prevData,
+                    profilePictureURL: pictureUrl,
+                }));
+            } else {
+                console.error('Failed to revert profile picture:', response.data.message);
+            }
+            return response.data;
+        } catch (error) {
+            console.error('An error occurred while updating profile picture:', error);
+            return { success: false, message: error.message };
+        }
+    };
     
 const CoverPhoto = () => (
       
@@ -129,13 +168,15 @@ const CoverPhoto = () => (
 const ProfilePic = () => (
     <div className='absolute top-12 left-8 transform -translate-y-1.2 h-36 w-36 rounded-full overflow-hidden bg-white'>
         <div className='absolute top-2 left-2 transform -translate-y-1.2 h-32 w-32 rounded-full overflow-hidden'>
-            <img src={userProfile.profilePictureURL || defaultprofile}  alt="" className='h-full w-full object-cover'/>
+            <img src={userProfile.profilePictureURL || defaultprofile} onClick={()=> toggleModal()} alt="" className='h-full w-full object-cover'/>
+            
             {isOwnProfile ? (
                  <button 
                  onClick={() => profilePicRef.current.click()}
                  className='absolute bottom-4 right-2 transform -translate-y-1.2 overflow-hidden ' >
                      <img src={edit} alt="" className='w-7 h-7 '/>
              </button>
+
             ) : (<></>)}
             <input type="file"  ref={profilePicRef} accept='image/*' name='profilePicture' className='hidden'  onChange={handleProfileChange}/>
             <div>
@@ -150,6 +191,7 @@ const ProfilePic = () => (
         <div className='relative h-cover border border-gray-300 rounded-sm shadow-inside'>
             <CoverPhoto/>
         <ProfilePic></ProfilePic>
+        
         <div className='flex flex col justify-between pr-12'>
             <div className=' p-5'>
                 <h1 className='font-bold text-2xl capitalize ml-2 pl-36'>{profileData.name}</h1>
@@ -168,6 +210,29 @@ const ProfilePic = () => (
             )}
         </div> 
        </div>
+       {isModalOpen && (
+                <div className='fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center'>
+                    <div className='bg-gray-700 p-8 rounded shadow-lg relative'>
+                        <button onClick={toggleModal} className='absolute top-2 right-2 text-gray-600 hover:text-gray-900'>
+                            &times;
+                        </button>
+                        <div className="flex p-3 ">
+                    {history.map((picture, index) => (
+                        <img
+                            key={index}
+                            width={150}
+                            src={picture.profilePicture}
+                            alt={`Profile history ${index}`}
+                            onClick={() => handleHistoryClick(picture.profilePicture)}
+                            style={{ cursor: 'pointer' }}
+                            className='m-4'
+                        />
+                    ))}
+                </div>
+                    </div>
+                </div>
+            )}
+       
     </div>
   )
 }
