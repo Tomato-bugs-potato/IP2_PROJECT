@@ -15,7 +15,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST" && isset($_FILES["profilePicture"]) &&
 
     if ($fileError === UPLOAD_ERR_OK) {
         // Specify upload directory and move the uploaded file
-        $uploadDir = 'C://Users//HP 15//OneDrive//Desktop//Semister Course//React_PHP//job_portal//public//images//'; // Directory where files will be saved
+        $uploadDir = 'uploads/'; // Directory where files will be saved
         
         // Create the upload directory if it doesn't exist
         if (!file_exists($uploadDir)) {
@@ -23,7 +23,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST" && isset($_FILES["profilePicture"]) &&
         }
 
         $uploadPath = $uploadDir . $fileName; // Full path to save the file
-        $folder = 'images/'.$fileName;
+        $folder = 'uploads/'.$fileName;
         // Move the uploaded file to the specified directory
         if (move_uploaded_file($fileTmpName, $uploadPath)) {
             // File uploaded successfully

@@ -38,7 +38,13 @@ const Profile = () => {
   }, [id]); 
 
   const handlePrint = () => {
+    const printContents = document.getElementById('printableArea').innerHTML;
+    const originalContents = document.body.innerHTML;
+
+    document.body.innerHTML = printContents;
     window.print();
+    document.body.innerHTML = originalContents;
+    window.location.reload();
   };
 
   return (
@@ -55,8 +61,8 @@ const Profile = () => {
            </div>    
            ) : (<></>)}
           </div>
-            <div>
-            <hr className=''/>
+            <div id='printableArea'>
+            <hr className='' />
             <PersonCard onUpdateProfile= {handleProfileUpdate} profileData={profileData} isOwnProfile = {isOwnProfile}/>
             <AboutPerson  profileData={profileData} isOwnProfile = {isOwnProfile}/>   
             <Experiences profileData={profileData} isOwnProfile = {isOwnProfile}/>

@@ -146,7 +146,7 @@ useEffect(() => {
     
 const CoverPhoto = () => (
       
-    <div className='flex justify-end relative h-32 bg-cover bg-center w-full' style={{backgroundImage: `url(${userProfile.coverPictureURL || defaultprofile})`}}>
+    <div className='flex justify-end relative h-32 bg-cover bg-center w-full' style={{backgroundImage: `url(${`http://localhost/JobpiaSERVER/${userProfile.coverPictureURL}` || defaultprofile})`}}>
         <div className='p-5'>
             {isOwnProfile ? (
                   <button >
@@ -168,7 +168,7 @@ const CoverPhoto = () => (
 const ProfilePic = () => (
     <div className='absolute top-12 left-8 transform -translate-y-1.2 h-36 w-36 rounded-full overflow-hidden bg-white'>
         <div className='absolute top-2 left-2 transform -translate-y-1.2 h-32 w-32 rounded-full overflow-hidden'>
-            <img src={userProfile.profilePictureURL || defaultprofile} onClick={()=> toggleModal()} alt="" className='h-full w-full object-cover'/>
+            <img src={`http://localhost/JobpiaSERVER/${userProfile.profilePictureURL}` || defaultprofile} onClick={()=> toggleModal()} alt="" className='h-full w-full object-cover'/>
             
             {isOwnProfile ? (
                  <button 
@@ -218,10 +218,11 @@ const ProfilePic = () => (
                         </button>
                         <div className="flex p-3 ">
                     {history.map((picture, index) => (
-                        <img
+                            
+                            <img
                             key={index}
                             width={150}
-                            src={picture.profilePicture}
+                            src={`http://localhost/JobpiaSERVER/${picture.profilePicture}`}
                             alt={`Profile history ${index}`}
                             onClick={() => handleHistoryClick(picture.profilePicture)}
                             style={{ cursor: 'pointer' }}

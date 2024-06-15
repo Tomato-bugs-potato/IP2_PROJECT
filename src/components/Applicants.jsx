@@ -154,7 +154,7 @@ const PostedJobs = () => {
                              <button className='py-1.5 px-5 border border-solid-5 rounded:sm text-blue font-bold'>
                           <Link         
                               to={{ 
-                                pathname: `/applicantProfile/${jobs.id}`,
+                                pathname: `/applicantProfile/${jobs.user_id}`,
                                 state: { jobsId: jobs.id } 
                               }}>View Profile</Link>
                         </button>

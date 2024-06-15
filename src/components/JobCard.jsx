@@ -1,7 +1,6 @@
 import React, {useState, useEffect} from 'react'
 import { Link } from 'react-router-dom';
 import { FiCalendar, FiDollarSign, FiMapPin, FiClock } from 'react-icons/fi';
-import img from "../../public/images/Linear.png";
 const jobCard = ({data}) => {
 
   const {_id,companyName,companyLogo, jobTitle,minPrice, maxPrice, salaryType, jobLocation, employmentType, postingDate,description} = data;
@@ -16,7 +15,7 @@ const jobCard = ({data}) => {
     <div>
       <section className='flex justify-between m-3 border border-gray-300 shadow-custom p-4 cursor-pointer'>
         <Link to={"/"} className="flex gap-4 flex-col sm:flex-row items-start">
-            <img src={companyLogo} alt="" className='w-20 h-13'/>
+            <img src={`http://localhost/JobpiaSERVER/${companyLogo}`} alt="" className='w-24 h-20'/>
             <div>
                 <h4 className='text-primary mb-1 ml-2'>{companyName}</h4>
                 <h3 className='text-lg font-semibold mb-2'>{jobTitle}</h3>

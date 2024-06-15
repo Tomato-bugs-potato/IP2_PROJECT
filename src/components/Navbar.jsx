@@ -4,28 +4,47 @@ import { Link } from 'react-router-dom';
 import { FaBarsStaggered, FaXmark} from "react-icons/fa6";
 import AllJobs from '../pages/AllJobs';
 import { useAuth } from '../contexts/AuthProvider';
-import { doSignOut } from '../firebase/auth';
-import { fetchProfilePic } from '../firebase/personalProfileHandler/FirebaseFunctions';
-
+import axios from 'axios';
 
 const Navbar = () => {
     const [isMenuOpen, setMenuOpen] = useState(false);
-    const [profilePic, setProfilePic] = useState('');
-    const {currentUser} = useAuth();
-    const userId = currentUser ? currentUser.uid : null;
+    const [userProfile, setUserProfile] = useState([]);
+    const userData = JSON.parse(sessionStorage.getItem("userData"));
+    const id = userData?.id;
     const { userLoggedIn, logout} = useAuth();
     const handleMenuToggler = () => {
         setMenuOpen(!isMenuOpen)
     };
 
-    useEffect(()=> {
-        const fetchData = async() => {
-            const profilePic = await fetchProfilePic(userId);
-            setProfilePic(profilePic);
-        };
-        fetchData();
+    
+useEffect(() => {
+    const fetchPictures = async () => {
+      try {
+        const response = await axios.get(`http://localhost/JobpiaSERVER/displayProfile.php?userId${id}`, {
+          params: {
+            userId: id, 
+          },
+        });
+        
+        if (response.data.success) {
+          const { profilePictureURL, coverPictureURL } = response.data;
+          setUserProfile({
+            profilePictureURL: profilePictureURL ,
+            coverPictureURL: coverPictureURL,
+          });
+        } else {
+          console.error('Failed to fetch pictures:', response.data.message);
+        }
+      } catch (error) {
+        console.error('Error fetching pictures:', error);
+      }
+    };
+  
+    if (id) {
+      fetchPictures();
+    }
+  }, [id]); 
 
-    }, [userId]);
 
     const handleLogout = async() => {
        logout()
@@ -69,7 +88,7 @@ const Navbar = () => {
                             <button onClick={handleLogout} className='text-white py-2 px-4 mt-1 bg-blue border rounded '>Sign Out</button>
                         </div>
                         <div>
-                            <Link to={"/sidebarProfile"}><img src={profilePic} alt="" className='w-12 h-12 rounded-full cursor-pointer'/></Link>
+                            <Link to={"/sidebarProfile"}><img src={`http://localhost/JobpiaSERVER/${userProfile.profilePictureURL}`} alt="" className='w-12 h-12 rounded-full cursor-pointer'/></Link>
                         </div>
                     </div>
                     

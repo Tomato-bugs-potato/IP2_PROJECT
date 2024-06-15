@@ -6,7 +6,9 @@ import { useNavigate } from 'react-router-dom';
 const ProfileEdit = () => {
   const navigate = useNavigate();
   const userData = JSON.parse(sessionStorage.getItem("userData"));
+  const [profileData, setProfiledata] = useState([]);
   const id = userData?.id;
+  const name = userData?.name;
  
   const [formData, setFormData] = useState({
     userId: id,
@@ -42,6 +44,7 @@ const ProfileEdit = () => {
 
         if(response.ok) {
             const data = await response.text();
+            window.alert('Profile updated successfully.');
             console.log("Form Submitted Successfully:", data);
         } else {
             console.log("Failed to submit form:", response.statusText);
@@ -54,62 +57,79 @@ const ProfileEdit = () => {
 
 
 
+useEffect(() => {
+  const fetchProfileData = async () => {
+    try {
+      const response = await fetch(`http://localhost/JobpiaSERVER/profile.php?userId=${id}`);
+      if (response.ok) {
+        const profileData = await response.json();
+        setProfiledata(profileData);
+      } else {
+        console.log("Failed to fetch profile data");
+      }
+    } catch (error) {
+      console.error('Error fetching profile data: ', error);
+    }
+  };
+
+  fetchProfileData();
+}, [id]); 
 
 
     return (
       <div className='max-w-screen-2xl container w-full xl:px-2 px-4 py-10 flex justify-center'>
-        <div className='bg-white py-10 px-4 lg:px-10 w-[90%] rounded:sm shadow-custom'>
+        <div className='bg-bar py-10 px-4 lg:px-10 w-[70%] rounded:sm shadow-custom'>
         <div className='flex justify-between mx-auto mb-5   border-b-2'>
         </div >
-              <form onSubmit={handleSubmit} className='space-y-5 '>
+              <form onSubmit={handleSubmit} autoSave='true' className='space-y-5 '>
             <div className='flex flex-col lg:flex-row items-center justify-between gap-8'>
               <div className='lg:w-1/2 w-full'>
                 <input type="number"  name='userId' value={id} className='hidden' />
                 <label className='block mb-2 text-lg font-semibold'>Full Name</label>
-                <input type="text" name='name'   placeholder='Enter your name' className='block w-full  flex-1 border-1 bg-white py-1.5 pl-3 text-gray-800 placeholder:text-grey-400
+                <input type="text" name='name' value={profileData.name} placeholder='Enter your name' className='block w-full  flex-1 border-1 bg-white py-1.5 pl-3 text-gray-800 placeholder:text-grey-400
                 focus:outline-none sm:text-sm sm:leading-6'/>
               </div>
               <div className='lg:w-1/2 w-full'>
                 <label className='block mb-2 text-lg font-semibold'>Email Address</label>
-                <input type="email" name='email'  placeholder='Enter the company name'  className='block w-full  flex-1 border-1 bg-white py-1.5 pl-3 text-gray-800 placeholder:text-grey-400
+                <input type="email" name='email' value={profileData.email} placeholder='Enter the company name'  className='block w-full  flex-1 border-1 bg-white py-1.5 pl-3 text-gray-800 placeholder:text-grey-400
                 focus:outline-none sm:text-sm sm:leading-6'/>
               </div>
             </div>
             <div className='flex flex-col lg:flex-row items-center justify-between gap-8'>
               <div className='lg:w-1/2 w-full'>
                 <label className='block mb-2 text-lg font-semibold'>Job Name</label>
-                <input type="text" name='jobName'   placeholder='Enter your name' className='block w-full  flex-1 border-1 bg-white py-1.5 pl-3 text-gray-800 placeholder:text-grey-400
+                <input type="text" name='jobName' value={profileData.jobName}  placeholder='Enter your name' className='block w-full  flex-1 border-1 bg-white py-1.5 pl-3 text-gray-800 placeholder:text-grey-400
                 focus:outline-none sm:text-sm sm:leading-6'/>
               </div>
               <div className='lg:w-1/2 w-full'>
                 <label className='block mb-2 text-lg font-semibold'>Location</label>
-                <input type="text" name='location'  placeholder='Enter the company name'  className='block w-full  flex-1 border-1 bg-white py-1.5 pl-3 text-gray-800 placeholder:text-grey-400
+                <input type="text" name='location' value={profileData.location} placeholder='Enter the company name'  className='block w-full  flex-1 border-1 bg-white py-1.5 pl-3 text-gray-800 placeholder:text-grey-400
                 focus:outline-none sm:text-sm sm:leading-6'/>
               </div>
             </div>
             <div className='flex flex-col lg:flex-row items-center justify-between gap-8'>
               <div className='lg:w-full w-full'>
                 <label className='block mb-2 text-lg font-semibold'>Personal Bio</label>
-                <input type="text" name='bio'   placeholder='Enter your name' className='block w-full  flex-1 border-1 bg-white py-3 pl-3 text-gray-800 placeholder:text-grey-400
+                <input type="text" name='bio' value={profileData.bio}  placeholder='Enter your name' className='block w-full  flex-1 border-1 bg-white py-3 pl-3 text-gray-800 placeholder:text-grey-400
                 focus:outline-none sm:text-sm sm:leading-6'/>
               </div>
             </div>
             <div className='flex flex-col lg:flex-row items-center justify-between gap-8'>
               <div className='lg:w-1/2 w-full'>
                 <label className='block mb-2 text-lg font-semibold'>Phone Number</label>
-                <input type="text" name='phone'   placeholder='Enter your name' className='block w-full  flex-1 border-1 bg-white py-1.5 pl-3 text-gray-800 placeholder:text-grey-400
+                <input type="text" name='phone' value={profileData.phone}  placeholder='Enter your name' className='block w-full  flex-1 border-1 bg-white py-1.5 pl-3 text-gray-800 placeholder:text-grey-400
                 focus:outline-none sm:text-sm sm:leading-6'/>
               </div>
               <div className='lg:w-1/2 w-full'>
                 <label className='block mb-2 text-lg font-semibold'>Current Job Location</label>
-                <input type="text" name='currJobLocation'   placeholder='Enter your name' className='block w-full  flex-1 border-1 bg-white py-3 pl-3 text-gray-800 placeholder:text-grey-400
+                <input type="text" name='currJobLocation' value={profileData.currJobLocation}  placeholder='Enter your name' className='block w-full  flex-1 border-1 bg-white py-3 pl-3 text-gray-800 placeholder:text-grey-400
                 focus:outline-none sm:text-sm sm:leading-6'/>
               </div>
             </div>
               <div className='flex flex-col lg:flex-row items-center justify-between gap-8'>
                 <div className='lg:w-full w-full'>
                   <label className='block mb-2 text-lg font-semibold'>About Me</label>
-                  <textarea name='aboutMe'  className='w-full pl-3 pl-3 py-1.5 focus:outline-none placeholder:text-gray-400' 
+                  <textarea name='aboutMe' value={profileData.aboutMe} className='w-full pl-3 pl-3 py-1.5 focus:outline-none placeholder:text-gray-400' 
                         rows={6}
                       placeholder= "Mollit in laborum tempor Lorem incididunt irure. Aute eu ex ad sunt. Pariatur sint culpa do incididunt eiusmod eiusmod culpa. laborum tempor Lorem incididunt.">
                   </textarea>

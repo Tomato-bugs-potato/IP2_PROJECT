@@ -8,6 +8,7 @@ header("Content-Type: application/json");
 require_once 'database.php';
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
+    $fullname = $_POST['fullName'];
     $email = $_POST['email'];
     $password = $_POST['password'];
 
@@ -20,11 +21,11 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     if($checkResult-> num_rows > 0) {
         echo "Email already registered";
     } else {
-        $insertSql = "INSERT INTO users (email, password) VALUES (?, ?)";
+        $insertSql = "INSERT INTO users (name, email, password) VALUES (?, ?, ?)";
         $insertStmt = $conn->prepare($insertSql);
         
         $hashed_password = password_hash($password, PASSWORD_DEFAULT);
-        $insertStmt->bind_param("ss", $email, $hashed_password);
+        $insertStmt->bind_param("sss", $fullname, $email, $hashed_password);
 
         if ($insertStmt->execute()) {
             echo "Signup Successfull";

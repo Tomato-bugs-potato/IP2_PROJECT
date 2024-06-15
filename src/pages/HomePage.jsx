@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from 'react'
-import { useLocation } from 'react-router-dom'
 import SiteMoto from '../components/SiteMoto'
 import SearchBar from '../components/SearchBar'
 import ExploreCategory from '../components/ExploreCategory'
@@ -11,7 +10,7 @@ import Tailwind from '../TrainTailwind/Tailwind'
 import JobCard from '../components/JobCard'
 import Jobs from '../components/Jobs'
 import SetupProfile from '../components/popup/SetupProfile'
-import { useNavigate } from 'react-router-dom'
+import { useNavigate, useLocation } from 'react-router-dom'
 
 export const HomePage = () => {
 
@@ -22,6 +21,11 @@ export const HomePage = () => {
   const navigate = useNavigate();
   const userData = JSON.parse(sessionStorage.getItem("userData"));
   const id = userData?.id;
+  const location = useLocation();
+  const queryParams = new URLSearchParams(location.search);
+  const isNewUser = queryParams.get('newUser') === 'true';
+  console.log(isNewUser);
+
   
   console.log(userData);
   
@@ -97,7 +101,7 @@ export const HomePage = () => {
          <ExploreCategory />
         <FeaturedJobs result={firstFiveJobs} />
         <div>
-          {id && <SetupProfile id = {id}/>}
+          {isNewUser && <SetupProfile isNewUser = {isNewUser}/>}
         </div>
       </div>
   )

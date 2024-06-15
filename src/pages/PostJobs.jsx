@@ -23,6 +23,7 @@ const PostJobs = () => {
 
         if(response.ok) {
             const data = await response.text();
+            window.alert('Job posted successfully.');
             console.log("Form Submitted Successfully:", data);
         } else {
             console.log("Failed to submit form:", response.statusText);
@@ -61,7 +62,7 @@ const PostJobs = () => {
       <div className='flex justify-center lg:text-4xl sm:text-2xl md:text-3xl font-bold mx-auto mb-8'><h1 className=''>Post Job</h1></div>
         <form onSubmit={handleSubmit} enctype="multipart/form-data" className='space-y-5'>
           <div className='flex flex-col lg:flex-row items-center justify-between gap-8'>
-            <input type="number" value={id} name='userId'/>
+            <input type="number" className='hidden' value={id} name='userId'/>
             <div className='lg:w-1/2 w-full'>
               <label className='block mb-2 text-lg font-semibold'>Job Title</label>
               <input type="text" placeholder='Enter Job title' name='jobTitle' className='block w-full  flex-1 border-1 bg-white py-1.5 pl-3 text-gray-800 placeholder:text-grey-400
